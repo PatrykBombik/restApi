@@ -6,9 +6,18 @@ import subscribersRouter from './routes/subscribers.js';
 dotenv.config();
 const app = express();
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => console.log('MongoDB Connected...'))
+    .catch(err => {
+        console.log('Failed to connect to MongoDB')
+        console.log(err)
+    });
+
 const db = mongoose.connection;
-db.on('error', (error) => console.error(error));
+db.on('error', (error) => {
+    console.log('MongoDB Connection Error')
+    console.error(error)
+});
 db.once('open', () => console.log('Connected to Database'));
 
 app.use(express.json());
